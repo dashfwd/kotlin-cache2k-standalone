@@ -1,8 +1,8 @@
 # Cache2K Kotlin examples
 This project contains examples of using [Cache2K](https://cache2k.org) with Kotlin.
 
-The original examples are in Java; this project contains those examples converted to
-Kotlin (and, in some cases, expanded upon).
+In Cache2k's documentation, the examples are in Java; this project contains those examples converted to
+Kotlin.  In some cases the examples are somewhat expanded upon.
 
 The sections from the original document are:
 - [2.2. Using A Cache](https://cache2k.org/docs/latest/user-guide.html#using-a-cache)
