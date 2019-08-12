@@ -1,18 +1,16 @@
 package dashfwd
 
-import org.cache2k.Cache
 import org.cache2k.Cache2kBuilder
 
 /**
  * see https://cache2k.org/docs/latest/user-guide.html#using-a-cache
  */
 class Part2_2_UsingACache {
-    val cache = object : Cache2kBuilder<String, String>() {}
+    private val cache = object : Cache2kBuilder<String, String>() {}
         .name("routeToAirline")
         .eternal(true) // alternately expireAfterWrite(2, TimeUnit.MINUTES)
         .entryCapacity(100)
         .build()
-            as Cache<String, String>
 
     fun execute() {
         // populate with our favorites
