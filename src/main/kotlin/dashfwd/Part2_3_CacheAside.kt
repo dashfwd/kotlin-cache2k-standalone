@@ -1,18 +1,16 @@
 package dashfwd
 
-import org.cache2k.Cache
 import org.cache2k.Cache2kBuilder
 import kotlin.system.measureTimeMillis
 
 // see https://cache2k.org/docs/latest/user-guide.html#cache-aside
 class Part2_3_CacheAside {
-    val favoriteAirlineDatabase = FavoriteAirlineDatabase()
+    private val favoriteAirlineDatabase = FavoriteAirlineDatabase()
 
     // Key = "MUC-SFO", Value = "Yeti Jet"
-    val routeToAirline = object : Cache2kBuilder<String, String>() {}
+    private val routeToAirline = object : Cache2kBuilder<String, String>() {}
         .name("routeToAirline")
         .build()
-            as Cache<String, String>
 
     fun lookupFavoriteAirline(origin: String, destination: String): String? {
         val route = "$origin-$destination"

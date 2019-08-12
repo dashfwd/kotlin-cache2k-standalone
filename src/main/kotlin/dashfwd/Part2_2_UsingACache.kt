@@ -4,11 +4,14 @@ import org.cache2k.Cache2kBuilder
 
 /**
  * see https://cache2k.org/docs/latest/user-guide.html#using-a-cache
+ *
+ * Note: This section doesn't follow the code in "Using a cache" exactly; it
+ * adds a few more examples that didn't exist in the original.
  */
 class Part2_2_UsingACache {
     private val cache = object : Cache2kBuilder<String, String>() {}
         .name("routeToAirline")
-        .eternal(true) // alternately expireAfterWrite(2, TimeUnit.MINUTES)
+        .eternal(true) // alternately: expireAfterWrite(2, TimeUnit.MINUTES)
         .entryCapacity(100)
         .build()
 
