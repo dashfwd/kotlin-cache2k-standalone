@@ -1,5 +1,9 @@
 package dashfwd
 
+/**
+ * This is effectively a mock of a database that contains favorite
+ * airlines for a given route.
+ */
 class FavoriteAirlineDatabase {
     private val databaseData = mapOf(
         Route("MUC", "SFO") to "Yeti Jet",

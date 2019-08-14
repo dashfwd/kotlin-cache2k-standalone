@@ -1,29 +1,40 @@
 package dashfwd
 
 import org.cache2k.Cache2kBuilder
-import org.cache2k.CacheEntry
-import org.cache2k.expiry.ExpiryTimeValues.ETERNAL
-import org.cache2k.expiry.ExpiryTimeValues.NO_CACHE
 import kotlin.system.measureTimeMillis
 
-// see https://cache2k.org/docs/latest/user-guide.html#using-null-values
+/**
+ *  How are null values handled?
+ *
+ *  In the Cache Aside example, if our method returned a null
+ *  value we didn't add the item to the cache, but this means that you are still
+ *  incurring the cost of a slow lookup for values that don't exist in the database.
+ *
+ *  In the Read Through example returning a null value from the loader method
+ *  would cause Cache2K to throw an exception, because by default null values are not
+ *  cached.  Depending on your application that might be fine -- nulls might
+ *  be a case that never happens.
+ *
+ *  But if you need nulls in your cache, there's another mechanism...
+ *
+ *  In this example we use "permitNullValues(true)" tell Cache2K that it's OK
+ *  to cache null values.
+ *
+ *  See https://cache2k.org/docs/latest/user-guide.html#using-null-values
+ */
+
 class Part2_5_UsingNullValues {
-    private val favoriteAirlineDatabase = FavoriteAirlineDatabase()
+    private val airlineDB = FavoriteAirlineDatabase()
 
     // Key = "MUC-SFO", Value = "Yeti Jet"
     private val routeToAirline = object : Cache2kBuilder<String, String>() {}
         .name("routeToAirline")
-        .loader(favoriteAirlineDatabase::findFavoriteAirline)
-        .expiryPolicy(this::expiryPolicy) // change expiry based on whether things are null
+        .loader(airlineDB::findFavoriteAirline)
         .permitNullValues(true)      // allow null values in the cache
         .build()
 
     fun lookupFavoriteAirline(origin: String, destination: String): String? {
         return routeToAirline.get("$origin-$destination")
-    }
-
-    private fun expiryPolicy(key:String, value:String?, loadTime:Long, oldEntry:CacheEntry<String, String>?):Long {
-        return if (value == null) {  NO_CACHE } else { ETERNAL } // don't cache null
     }
 }
 
@@ -31,11 +42,8 @@ fun main() {
     val example = Part2_5_UsingNullValues()
     for (i in 1..5) {
         val elapsed = measureTimeMillis {
-            // There is no "ORD" to "SFO" favorite airline; this will return null.
-            // Our cache allows nulls using permitNullValues() but then immediately
-            // expires the null value from the cache using the expiryPolicy(...).  Sometimes
-            // you'll want to cache the null values and other times you won't; the example
-            // here shows how you handle the case that you do not want to cache nulls.
+            // Because there is no "ORD" to "SFO" favorite airline; this will return null,
+            // To allow this null value to be cached "permitNullValues(true)" is used.
             example.lookupFavoriteAirline("ORD", "SFO")
         }
         println("[UsingNullValues] For run #$i, elapsed time was $elapsed")

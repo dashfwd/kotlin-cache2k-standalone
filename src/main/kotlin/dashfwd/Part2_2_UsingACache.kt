@@ -3,7 +3,15 @@ package dashfwd
 import org.cache2k.Cache2kBuilder
 
 /**
- * see https://cache2k.org/docs/latest/user-guide.html#using-a-cache
+ * This shows some introductory examples of using Cache2K.  This includes:
+ * - Creating a cache
+ * - Putting items in the cache
+ * - Querying the cache
+ * - Replacing and item in the cache (an atomic operation)
+ * - Removing items from the cache
+ * - Clearing the cache.
+ *
+ * See https://cache2k.org/docs/latest/user-guide.html#using-a-cache
  *
  * Note: This section doesn't follow the code in "Using a cache" exactly; it
  * adds a few more examples that didn't exist in the original.
@@ -11,8 +19,8 @@ import org.cache2k.Cache2kBuilder
 class Part2_2_UsingACache {
     private val cache = object : Cache2kBuilder<String, String>() {}
         .name("routeToAirline")
-        .eternal(true) // alternately: expireAfterWrite(2, TimeUnit.MINUTES)
-        .entryCapacity(100)
+        .eternal(true)      // expiration; can also use expireAfterWrite(2, TimeUnit.MINUTES)
+        .entryCapacity(100) // maximum items in the cache
         .build()
 
     fun execute() {
